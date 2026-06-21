@@ -21,7 +21,6 @@
                         dark: '#050505',
                         glass: 'rgba(255, 255, 255, 0.03)',
                         glassBorder: 'rgba(255, 255, 255, 0.08)',
-                        // Mode Biasa - Hijau
                         green: {
                             50: '#ecfdf5',
                             100: '#d1fae5',
@@ -34,7 +33,6 @@
                             800: '#065f46',
                             900: '#064e3b',
                         },
-                        // Mode Pro - Biru
                         blue: {
                             50: '#eff6ff',
                             100: '#dbeafe',
@@ -53,9 +51,10 @@
                         'slide-up': 'slideUp 0.3s ease-out forwards',
                         'popup-in': 'popupIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
                         'popup-out': 'popupOut 0.3s ease-in forwards',
-                        'aurora': 'aurora 8s ease-in-out infinite',
+                        'aurora': 'aurora 12s ease-in-out infinite',
+                        'shooting-star': 'shootingStar 4s linear infinite',
+                        'twinkle': 'twinkle 2s ease-in-out infinite',
                         'float': 'float 6s ease-in-out infinite',
-                        'shimmer': 'shimmer 2s ease-in-out infinite',
                     },
                     keyframes: {
                         pulseGlow: {
@@ -78,13 +77,18 @@
                             '0%, 100%': { backgroundPosition: '0% 50%' },
                             '50%': { backgroundPosition: '100% 50%' },
                         },
+                        shootingStar: {
+                            '0%': { transform: 'translateX(0) translateY(0) scale(1)', opacity: 1 },
+                            '70%': { opacity: 1 },
+                            '100%': { transform: 'translateX(-300px) translateY(300px) scale(0)', opacity: 0 },
+                        },
+                        twinkle: {
+                            '0%, 100%': { opacity: 0.3 },
+                            '50%': { opacity: 1 },
+                        },
                         float: {
                             '0%, 100%': { transform: 'translateY(0px)' },
                             '50%': { transform: 'translateY(-10px)' },
-                        },
-                        shimmer: {
-                            '0%': { backgroundPosition: '-200% 0' },
-                            '100%': { backgroundPosition: '200% 0' },
                         }
                     }
                 }
@@ -211,6 +215,10 @@
             overflow-x: auto; 
             font-size: 13px; 
             background: transparent !important; 
+        }
+        .code-block-wrapper pre code {
+            white-space: pre;
+            tab-size: 2;
         }
         
         .glass-panel { background: rgba(15, 15, 17, 0.75); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.06); }
@@ -402,16 +410,58 @@
 
         /* Aurora Background */
         .aurora-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
             background: linear-gradient(135deg, #10b981 0%, #059669 25%, #047857 50%, #064e3b 75%, #10b981 100%);
-            background-size: 200% 200%;
-            animation: aurora 8s ease-in-out infinite;
+            background-size: 300% 300%;
+            animation: aurora 12s ease-in-out infinite;
+            opacity: 0.3;
         }
         .aurora-bg.pro-mode {
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 25%, #1d4ed8 50%, #1e40af 75%, #3b82f6 100%);
-            background-size: 200% 200%;
-            animation: aurora 8s ease-in-out infinite;
+            background-size: 300% 300%;
+            animation: aurora 12s ease-in-out infinite;
+            opacity: 0.3;
         }
+        
+        /* Stars */
+        .stars-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite;
+        }
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: shootingStar var(--duration) linear infinite;
+            box-shadow: 0 0 6px 2px rgba(255,255,255,0.3);
+        }
+        .shooting-star::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(to left, rgba(255,255,255,0.8), transparent);
+            transform: rotate(0deg) translateX(0);
+        }
+
         .aurora-overlay {
+            position: relative;
+            z-index: 1;
             background: radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.05), transparent 70%);
         }
         .aurora-overlay.pro-mode {
@@ -468,7 +518,6 @@
             background: rgba(255,255,255,0.2);
         }
 
-        /* Mode toggle buttons */
         .mode-btn {
             transition: all 0.3s;
             position: relative;
@@ -493,7 +542,6 @@
             color: #fff;
         }
 
-        /* Status indicator */
         .status-dot {
             width: 6px;
             height: 6px;
@@ -503,9 +551,28 @@
         }
         .status-dot.green { background: #34d399; box-shadow: 0 0 10px rgba(52, 211, 153, 0.5); }
         .status-dot.blue { background: #60a5fa; box-shadow: 0 0 10px rgba(96, 165, 250, 0.5); }
+
+        /* Submit button stop state */
+        .submit-btn-stop {
+            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+            animation: pulse-red 1s ease-in-out infinite;
+        }
+        .submit-btn-stop:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+        }
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.6); }
+        }
     </style>
 </head>
 <body>
+
+    <!-- Aurora Background -->
+    <div class="aurora-bg" id="aurora-bg"></div>
+    
+    <!-- Stars & Shooting Stars -->
+    <div class="stars-container" id="stars-container"></div>
 
     <div class="app-wrapper aurora-overlay" id="app-wrapper">
 
@@ -625,7 +692,7 @@
                                     style="min-height: 48px;"></textarea>
                             </div>
                             
-                            <!-- Submit Btn -->
+                            <!-- Submit / Stop Btn -->
                             <div class="p-1 mb-0.5 md:mb-1">
                                 <button type="submit" id="submit-btn" disabled class="p-2.5 md:p-3 rounded-xl text-white transition-all disabled:opacity-20 disabled:bg-gray-600 disabled:cursor-not-allowed flex items-center justify-center min-w-[44px] min-h-[44px] bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700" id="submit-button">
                                     <i data-lucide="send" class="w-5 h-5 ml-0.5"></i>
@@ -725,8 +792,39 @@ ATURAN UTAMA:
             }, 3000);
         }
 
+        // --- STARS GENERATOR ---
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            const numStars = 200;
+            
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
+                star.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(star);
+            }
+            
+            // Shooting stars
+            for (let i = 0; i < 5; i++) {
+                const shooting = document.createElement('div');
+                shooting.className = 'shooting-star';
+                shooting.style.left = (Math.random() * 80 + 10) + '%';
+                shooting.style.top = (Math.random() * 40 + 5) + '%';
+                shooting.style.setProperty('--duration', (Math.random() * 3 + 3) + 's');
+                shooting.style.animationDelay = (Math.random() * 8 + 2) + 's';
+                container.appendChild(shooting);
+            }
+        }
+
         // --- INIT ---
         document.addEventListener('DOMContentLoaded', () => {
+            createStars();
             lucide.createIcons();
             
             marked.setOptions({
@@ -759,14 +857,18 @@ ATURAN UTAMA:
                     this.style.overflowY = 'hidden';
                 }
                 localStorage.setItem('aether_draft', this.value);
-                submitBtn.disabled = this.value.trim() === '';
+                submitBtn.disabled = this.value.trim() === '' || isGenerating;
             });
 
+            // Shift+Enter untuk new line, Enter untuk submit
             tx.addEventListener("keydown", function(e) {
                 if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
-                    document.getElementById('chat-form').dispatchEvent(new Event('submit'));
+                    if (!isGenerating && this.value.trim() !== '') {
+                        document.getElementById('chat-form').dispatchEvent(new Event('submit'));
+                    }
                 }
+                // Shift+Enter akan membuat new line secara default
             });
 
             document.getElementById('chat-form').addEventListener('submit', handleSubmit);
@@ -808,6 +910,10 @@ ATURAN UTAMA:
         }
 
         function startNewChat() {
+            if (isGenerating) {
+                showToast('⏳ Tunggu', 'Harap tunggu sampai AI selesai merespon', 'clock', 'green');
+                return;
+            }
             currentSessionId = Date.now().toString();
             sessions[currentSessionId] = { messages: [], title: 'Chat Baru' };
             localStorage.setItem('aether_sessions', JSON.stringify(sessions));
@@ -819,6 +925,10 @@ ATURAN UTAMA:
         }
 
         function setMode(mode) {
+            if (isGenerating) {
+                showToast('⏳ Tunggu', 'Harap tunggu sampai AI selesai merespon', 'clock', 'green');
+                return;
+            }
             currentMode = mode;
             const btnBiasa = document.getElementById('btn-mode-biasa');
             const btnPro = document.getElementById('btn-mode-pro');
@@ -829,6 +939,7 @@ ATURAN UTAMA:
             const submitBtn = document.getElementById('submit-button');
             const chatForm = document.getElementById('chat-form');
             const wrapper = document.getElementById('app-wrapper');
+            const auroraBg = document.getElementById('aurora-bg');
             
             if (mode === 'biasa') {
                 btnBiasa.className = 'mode-btn px-2.5 lg:px-3 py-1.5 text-[11px] lg:text-sm rounded-lg transition-all active-green';
@@ -841,6 +952,7 @@ ATURAN UTAMA:
                 submitBtn.className = 'p-2.5 md:p-3 rounded-xl text-white transition-all disabled:opacity-20 disabled:bg-gray-600 disabled:cursor-not-allowed flex items-center justify-center min-w-[44px] min-h-[44px] bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700';
                 chatForm.className = 'relative glass-panel rounded-2xl shadow-[0_5px_20px_rgba(0,0,0,0.5)] overflow-hidden border border-white/10 transition-all bg-[#0a0a0c]';
                 wrapper.className = 'app-wrapper aurora-overlay';
+                auroraBg.className = 'aurora-bg';
                 
                 showToast('🌿 Mode Biasa', 'Mode percakapan umum dengan gaya hijau', 'leaf', 'green');
             } else {
@@ -854,6 +966,7 @@ ATURAN UTAMA:
                 submitBtn.className = 'p-2.5 md:p-3 rounded-xl text-white transition-all disabled:opacity-20 disabled:bg-gray-600 disabled:cursor-not-allowed flex items-center justify-center min-w-[44px] min-h-[44px] bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700';
                 chatForm.className = 'relative glass-panel rounded-2xl shadow-[0_5px_20px_rgba(0,0,0,0.5)] overflow-hidden border border-white/10 transition-all bg-[#0a0a0c] pro-mode';
                 wrapper.className = 'app-wrapper aurora-overlay pro-mode';
+                auroraBg.className = 'aurora-bg pro-mode';
                 
                 showToast('💻 Mode Pro Code', 'Optimasi untuk kode & debugging', 'code', 'blue');
             }
@@ -906,6 +1019,10 @@ ATURAN UTAMA:
         }
 
         function deleteSession(id) {
+            if (isGenerating) {
+                showToast('⏳ Tunggu', 'Harap tunggu sampai AI selesai merespon', 'clock', 'green');
+                return;
+            }
             if (sessions[id]) {
                 delete sessions[id];
                 localStorage.setItem('aether_sessions', JSON.stringify(sessions));
@@ -924,6 +1041,10 @@ ATURAN UTAMA:
         }
 
         function loadSession(id) {
+            if (isGenerating) {
+                showToast('⏳ Tunggu', 'Harap tunggu sampai AI selesai merespon', 'clock', 'green');
+                return;
+            }
             if (!sessions[id]) return;
             currentSessionId = id;
             localStorage.setItem('aether_last_session', id);
@@ -1130,16 +1251,69 @@ ATURAN UTAMA:
             }
         }
 
+        // --- STOP CHAT FUNCTION ---
+        function stopChat() {
+            if (abortController) {
+                abortController.abort();
+                abortController = null;
+                isGenerating = false;
+                
+                // Kembalikan tombol ke mode kirim
+                const submitBtn = document.getElementById('submit-btn');
+                const icon = submitBtn.querySelector('i');
+                submitBtn.disabled = true;
+                submitBtn.className = 'p-2.5 md:p-3 rounded-xl text-white transition-all disabled:opacity-20 disabled:bg-gray-600 disabled:cursor-not-allowed flex items-center justify-center min-w-[44px] min-h-[44px] bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700';
+                submitBtn.innerHTML = '<i data-lucide="send" class="w-5 h-5 ml-0.5"></i>';
+                lucide.createIcons();
+                
+                // Hapus typing indicator
+                const typingEl = document.querySelector('[id^="typing-"]');
+                if (typingEl) typingEl.remove();
+                
+                showToast('⏹️ Chat Dihentikan', 'Generasi dihentikan oleh pengguna', 'stop-circle', 'green');
+                
+                // Enable input
+                document.getElementById('user-input').disabled = false;
+            }
+        }
+
+        // --- UPDATE SUBMIT BUTTON TO STOP ---
+        function updateSubmitButtonToStop() {
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.className = 'p-2.5 md:p-3 rounded-xl text-white transition-all flex items-center justify-center min-w-[44px] min-h-[44px] submit-btn-stop';
+            submitBtn.innerHTML = '<i data-lucide="square" class="w-5 h-5"></i>';
+            submitBtn.disabled = false;
+            submitBtn.onclick = function(e) {
+                e.preventDefault();
+                stopChat();
+            };
+            lucide.createIcons();
+        }
+
+        // --- RESET SUBMIT BUTTON ---
+        function resetSubmitButton() {
+            const submitBtn = document.getElementById('submit-btn');
+            const isPro = currentMode === 'pro';
+            submitBtn.className = `p-2.5 md:p-3 rounded-xl text-white transition-all disabled:opacity-20 disabled:bg-gray-600 disabled:cursor-not-allowed flex items-center justify-center min-w-[44px] min-h-[44px] ${isPro ? 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700' : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700'}`;
+            submitBtn.innerHTML = '<i data-lucide="send" class="w-5 h-5 ml-0.5"></i>';
+            submitBtn.disabled = true;
+            submitBtn.onclick = null;
+            lucide.createIcons();
+        }
+
+        // --- HANDLE SUBMIT ---
         async function handleSubmit(e) {
             e.preventDefault();
             const input = document.getElementById('user-input');
             const text = input.value.trim();
             if (!text || isGenerating) return;
             
+            // Save to session
             if (!sessions[currentSessionId]) {
                 sessions[currentSessionId] = { messages: [], title: text.substring(0, 50) };
             }
             
+            // Add user message
             sessions[currentSessionId].messages.push({ role: 'user', content: text });
             localStorage.setItem('aether_sessions', JSON.stringify(sessions));
             
@@ -1149,8 +1323,11 @@ ATURAN UTAMA:
             localStorage.removeItem('aether_draft');
             document.getElementById('submit-btn').disabled = true;
             
+            // Show typing indicator
             const typingId = showTypingIndicator();
             
+            // Ubah tombol menjadi STOP
+            updateSubmitButtonToStop();
             isGenerating = true;
             abortController = new AbortController();
             
@@ -1183,13 +1360,16 @@ ATURAN UTAMA:
                 const data = await response.json();
                 const content = data.choices[0].message.content;
                 
+                // Remove typing indicator
                 removeTypingIndicator(typingId);
                 
+                // Add AI response
                 sessions[currentSessionId].messages.push({ role: 'assistant', content });
                 localStorage.setItem('aether_sessions', JSON.stringify(sessions));
                 
                 addMessage('assistant', content);
                 
+                // Update session title if first message
                 if (sessions[currentSessionId].messages.length === 2) {
                     sessions[currentSessionId].title = text.substring(0, 50);
                     renderHistory();
@@ -1197,7 +1377,7 @@ ATURAN UTAMA:
                 
             } catch (error) {
                 if (error.name === 'AbortError') {
-                    showToast('⏹️ Dibatalkan', 'Generasi dihentikan oleh pengguna', 'stop-circle', 'green');
+                    // Sudah ditangani di stopChat
                 } else {
                     console.error('Error:', error);
                     showToast('❌ Error', 'Terjadi kesalahan. Coba lagi nanti.', 'alert-circle', 'green');
@@ -1206,7 +1386,10 @@ ATURAN UTAMA:
             }
             
             isGenerating = false;
+            abortController = null;
+            resetSubmitButton();
             document.getElementById('submit-btn').disabled = true;
+            document.getElementById('user-input').disabled = false;
         }
 
         function showTypingIndicator() {
